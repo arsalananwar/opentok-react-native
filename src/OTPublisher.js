@@ -16,7 +16,7 @@ class OTPublisher extends Component {
     this.state = {
       initError: null,
       publisher: null,
-      publisherId: uuid(),
+      publisherId: this.props.publisherId,
     };
     this.componentEvents = {
       sessionConnected: Platform.OS === 'android' ? 'session:onConnected' : 'session:sessionDidConnect',
