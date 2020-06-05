@@ -2,6 +2,7 @@ package com.opentokreactnative;
 
 import android.opengl.GLSurfaceView;
 import android.view.Gravity;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.facebook.react.uimanager.ThemedReactContext;
@@ -26,11 +27,24 @@ public class OTSubscriberLayout extends FrameLayout{
     public void createSubscriberView(String streamId) {
 
         ConcurrentHashMap<String, Subscriber> mSubscribers = sharedState.getSubscribers();
-        String pubOrSub = sharedState.getAndroidOnTop();
-        String zOrder = sharedState.getAndroidZOrder();
+        ConcurrentHashMap<String, String> androidOnTopMap = sharedState.getAndroidOnTopMap();
+        ConcurrentHashMap<String, String> androidZOrderMap = sharedState.getAndroidZOrderMap();
         Subscriber mSubscriber = mSubscribers.get(streamId);
         FrameLayout mSubscriberViewContainer = new FrameLayout(getContext());
+        String pubOrSub = "";
+        String zOrder = "";
         if (mSubscriber != null) {
+            if (mSubscriber.getSession() != null) {
+                if (androidOnTopMap.get(mSubscriber.getSession().getSessionId()) != null) {
+                    pubOrSub = androidOnTopMap.get(mSubscriber.getSession().getSessionId());
+                }
+                if (androidZOrderMap.get(mSubscriber.getSession().getSessionId()) != null) {
+                    zOrder = androidZOrderMap.get(mSubscriber.getSession().getSessionId());
+                }
+            }
+            if (mSubscriber.getView().getParent() != null) {
+                ((ViewGroup)mSubscriber.getView().getParent()).removeView(mSubscriber.getView());
+            }
             mSubscriber.setStyle(BaseVideoRenderer.STYLE_VIDEO_SCALE,
                 BaseVideoRenderer.STYLE_VIDEO_FILL);
             if (pubOrSub.equals("subscriber") && mSubscriber.getView() instanceof GLSurfaceView) {

@@ -36,7 +36,7 @@ class App extends Component {
   sendSignal = () => {
     const { isConnected } = this.state;
     if (isConnected) {
-      this.otSessionRef.signal({
+      this.otSessionRef.current.signal({
         data: '',
         to: '', // optional - connectionId of connected client you want to send the signal to
         type: '', // optional
@@ -97,6 +97,7 @@ class App extends Component {
       androidOnTop: '',  // Android only - valid options are 'publisher' or 'subscriber'
       useTextureViews: true,  // Android only - default is false
       isCamera2Capable: false, // Android only - default is false
+      ipWhitelist: false, // https://tokbox.com/developer/sdks/js/reference/OT.html#initSession - ipWhitelist
     };
   }
 
